@@ -1,12 +1,10 @@
-#!/usr/bin/env node
-
-const cac = require('cac')
-const md2Img = require('..')
+import cac from 'cac'
+import md2Img from '.'
 const { name, version } = require('../package')
 
 // Unified error handling
 /* istanbul ignore next */
-const onError = err => {
+const onError = (err: Error) => {
   console.error(err.message)
   process.exit(1)
 }
@@ -22,7 +20,7 @@ cli
   .command('<input>', 'Sample cli program')
   .option('--host <host>', 'Sample options')
   .example('  $ md2img w --host salen.ma')
-  .action((input, options) => {
+  .action((input: string, options: any) => {
     console.log(md2Img(input, options))
   })
 
