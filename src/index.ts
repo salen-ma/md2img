@@ -1,6 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 import marked from 'marked'
+import puppeteer from 'puppeteer'
+import ora from 'ora'
+import { cosmiconfigSync } from 'cosmiconfig'
 
 export interface Options {
   /**
@@ -15,10 +18,18 @@ export interface Options {
   width?: number
 }
 
-export default (input: string, options: Options = {}): void => {
+export interface Config {
+  template: string
+}
+
+export default async (input: string, options: Options = {}): Promise<string> => {
   if (typeof input !== 'string') {
     throw new TypeError(`Expected a string, got ${typeof input}`)
   }
+  const {
+    output = 'output.png',
+    width = 800
+  } = options
 
   const filename = path.resolve(input)
 
@@ -32,11 +43,20 @@ export default (input: string, options: Options = {}): void => {
   }
 
   const contents = fs.readFileSync(filename, 'utf8')
-  const html = marked(contents)
+  const fragment = marked(contents)
+  const explorer = cosmiconfigSync('md2img')
+  const configResult = explorer.search(process.cwd())
+  const config: Config = configResult?.config as Config
+  const html = config.template.replace('$fragment', fragment)
 
-  options = Object.assign({
-    output: 'output.png',
-    width: 800
-  }, options)
-  console.log(html)
+  const spinner = ora('Create img...').start()
+  const browser = await puppeteer.launch()
+  const page = await browser.newPage()
+  await page.setViewport({ width: width, height: 80 })
+  await page.setContent(html)
+  await page.screenshot({ path: output, fullPage: true })
+  await browser.close()
+  spinner.succeed('Create img complete.')
+
+  return output
 }

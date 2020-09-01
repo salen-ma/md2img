@@ -28,14 +28,17 @@
     "lib"
   ],
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint src",
     "compile": "tsc",
-    "test": "standard --fix && jest --coverage"
+    "test": "jest --coverage"
   },
-  "standard": {
-    "env": [
-      "jest"
-    ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm test"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js}": "eslint --fix"
   },
   "eslintConfig": {
     "extends": "standard-ts",
@@ -62,16 +65,23 @@
   },
   "dependencies": {
     "@types/marked": "^1.1.0",
+    "@types/puppeteer": "^3.0.1",
     "cac": "^6.6.1",
-    "marked": "^1.1.1"
+    "cosmiconfig": "^7.0.0",
+    "marked": "^1.1.1",
+    "ora": "^5.0.0",
+    "puppeteer": "^5.2.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@types/node": "^14.6.2",
     "eslint": "^7.7.0",
     "eslint-config-standard-ts": "^18.0.2",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "husky": "^4.2.5",
     "jest": "^26.4.0",
-    "standard": "^14.3.4",
+    "lint-staged": "^10.2.13",
     "ts-jest": "^26.3.0",
     "typescript": "^4.0.2"
   },
