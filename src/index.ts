@@ -22,6 +22,38 @@ export interface Config {
   template: string
 }
 
+const inputErrorHandle = (filename: string): void | never => {
+  if (!fs.existsSync(filename)) {
+    throw new Error('file path not exist')
+  }
+
+  const stat = fs.statSync(filename)
+  if (stat.isDirectory()) {
+    throw new Error('input path is a directory not a file')
+  }
+}
+
+const compileMd2Html = (filename: string): string => {
+  const contents = fs.readFileSync(filename, 'utf8')
+  const fragment = marked(contents)
+  const explorer = cosmiconfigSync('md2img')
+  const configResult = explorer.search(process.cwd())
+  const config: Config = configResult?.config as Config
+  return config.template.replace('$fragment', fragment)
+}
+
+const htmlScreenshot = async (html: string, width: number, output: string): Promise<string> => {
+  const spinner = ora('Create img...').start()
+  const browser = await puppeteer.launch()
+  const page = await browser.newPage()
+  await page.setViewport({ width: width, height: 80 })
+  await page.setContent(html)
+  await page.screenshot({ path: output, fullPage: true })
+  await browser.close()
+  spinner.succeed('Create img complete.')
+  return output
+}
+
 export default async (input: string, options: Options = {}): Promise<string> => {
   if (typeof input !== 'string') {
     throw new TypeError(`Expected a string, got ${typeof input}`)
@@ -32,31 +64,6 @@ export default async (input: string, options: Options = {}): Promise<string> => 
   } = options
 
   const filename = path.resolve(input)
-
-  if (!fs.existsSync(filename)) {
-    throw new Error('file path not exist')
-  }
-
-  const stat = fs.statSync(filename)
-  if (stat.isDirectory()) {
-    throw new Error('input path is a directory not a file')
-  }
-
-  const contents = fs.readFileSync(filename, 'utf8')
-  const fragment = marked(contents)
-  const explorer = cosmiconfigSync('md2img')
-  const configResult = explorer.search(process.cwd())
-  const config: Config = configResult?.config as Config
-  const html = config.template.replace('$fragment', fragment)
-
-  const spinner = ora('Create img...').start()
-  const browser = await puppeteer.launch()
-  const page = await browser.newPage()
-  await page.setViewport({ width: width, height: 80 })
-  await page.setContent(html)
-  await page.screenshot({ path: output, fullPage: true })
-  await browser.close()
-  spinner.succeed('Create img complete.')
-
-  return output
+  inputErrorHandle(filename)
+  return await htmlScreenshot(compileMd2Html(filename), width, output)
 }

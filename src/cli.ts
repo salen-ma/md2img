@@ -14,8 +14,6 @@ process.on('unhandledRejection', onError)
 
 const cli = cac(name)
 
-// TODO: Implement module cli
-
 cli
   .command('<input>', '.md file path')
   .option('-o, --output <output>', 'output image path')
