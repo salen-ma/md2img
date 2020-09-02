@@ -22,7 +22,12 @@ export interface Config {
   template: string
 }
 
-const inputErrorHandle = (filename: string): void | never => {
+const inputErrorHandle = (input: string): string | never => {
+  if (typeof input !== 'string') {
+    throw new TypeError(`Expected a string, got ${typeof input}`)
+  }
+
+  const filename = path.resolve(input)
   if (!fs.existsSync(filename)) {
     throw new Error('file path not exist')
   }
@@ -31,6 +36,8 @@ const inputErrorHandle = (filename: string): void | never => {
   if (stat.isDirectory()) {
     throw new Error('input path is a directory not a file')
   }
+
+  return filename
 }
 
 const compileMd2Html = (filename: string): string => {
@@ -55,15 +62,12 @@ const htmlScreenshot = async (html: string, width: number, output: string): Prom
 }
 
 export default async (input: string, options: Options = {}): Promise<string> => {
-  if (typeof input !== 'string') {
-    throw new TypeError(`Expected a string, got ${typeof input}`)
-  }
+  const filename = inputErrorHandle(input)
+
   const {
     output = 'output.png',
     width = 800
   } = options
 
-  const filename = path.resolve(input)
-  inputErrorHandle(filename)
   return await htmlScreenshot(compileMd2Html(filename), width, output)
 }
