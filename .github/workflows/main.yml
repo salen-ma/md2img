@@ -47,7 +47,7 @@ jobs:
     # 发布到 npm
     - name: Publish
       id: publish-to-npm
-    - uses: actions/setup-node@master
+      uses: actions/setup-node@master
       with:
         node-version: '12.x'
         registry-url: 'https://registry.npmjs.org/'
