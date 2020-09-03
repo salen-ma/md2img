@@ -45,7 +45,11 @@ const compileMd2Html = (filename: string): string => {
   const fragment = marked(contents)
   const explorer = cosmiconfigSync('md2img')
   const configResult = explorer.search(process.cwd())
-  const config: Config = configResult?.config as Config
+  const defaultConfigResult = explorer.search(path.resolve(__dirname, '../'))
+  let config: Config = configResult?.config
+  if (config == null) {
+    config = defaultConfigResult?.config
+  }
   return config.template.replace('$fragment', fragment)
 }
 
