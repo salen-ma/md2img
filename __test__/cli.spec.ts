@@ -41,6 +41,6 @@ test('unit:cli:help', async () => {
   const log = jest.spyOn(console, 'log').mockImplementation()
   await import('../src/cli')
   expect(log).toHaveBeenCalledTimes(1)
-  expect(log.mock.calls[0][0]).toContain('$ md2img <input>')
+  expect(log.mock.calls[0][0]).toContain('$ markdown2image <input>')
   restore()
 })

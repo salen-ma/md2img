@@ -1,9 +1,10 @@
 {
-  "name": "md2img",
+  "name": "markdown2image",
   "version": "0.1.0",
-  "description": "Awesome node modules.",
+  "description": "transform markdown to img",
   "keywords": [
-    "md2img",
+    "markdown",
+    "markdown2image",
     "cli",
     "salen-ma"
   ],
@@ -22,9 +23,9 @@
     "url": "https://github.com/salen-ma"
   },
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "bin": "bin/md2img.js",
   "files": [
-    "bin",
     "lib"
   ],
   "scripts": {

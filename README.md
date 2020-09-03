@@ -1,34 +1,23 @@
-# md2img
+# markdown2image
 
-> Awesome node modules.
+> transform markdown to img
 
 ## Installation
 
 ```shell
-$ npm install md2img
+# install it globally
+$ npm install -g markdown2image
 
 # or yarn
-$ yarn add md2img
+$ yarn global add markdown2image
 ```
 
 ## Usage
 
-<!-- TODO: Introduction of Usage -->
-
-## API
-
-<!-- TODO: Introduction of API -->
-
-### md2Img(input, options?)
-
-#### input
-
-- Type: `string`
-- Details: name string
-
-## CLI Usage
-
-<!-- TODO: Introduction of CLI -->
+```shell
+$ markdown2image <input> [-o|--output] [-w|--width]
+Create img complete.
+```
 
 ## License
 

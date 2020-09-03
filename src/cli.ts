@@ -18,7 +18,7 @@ cli
   .command('<input>', '.md file path')
   .option('-o, --output <output>', 'output image path')
   .option('-w, --width <width>', 'output image width')
-  .example('$ md2img test.md --output output.png --width 800')
+  .example('$ markdown2image test.md --output output.png --width 800')
   .action(md2Img)
 
 cli.help().version(version).parse()
