@@ -66,11 +66,13 @@
   },
   "dependencies": {
     "@types/marked": "^1.1.0",
+    "@types/prompts": "^2.0.8",
     "@types/puppeteer": "^3.0.1",
     "cac": "^6.6.1",
     "cosmiconfig": "^7.0.0",
     "marked": "^1.1.1",
     "ora": "^5.0.0",
+    "prompts": "^2.3.2",
     "puppeteer": "^5.2.1"
   },
   "devDependencies": {

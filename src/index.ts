@@ -4,6 +4,7 @@ import marked from 'marked'
 import puppeteer from 'puppeteer'
 import ora from 'ora'
 import { cosmiconfigSync } from 'cosmiconfig'
+import selectLayout from './select'
 
 export interface Options {
   /**
@@ -40,7 +41,7 @@ const inputErrorHandle = (input: string): string | never => {
   return filename
 }
 
-const compileMd2Html = (filename: string): string => {
+const compileMd2Html = async (filename: string): Promise<string> => {
   const contents = fs.readFileSync(filename, 'utf8')
   const fragment = marked(contents)
   const explorer = cosmiconfigSync('md2img')
@@ -49,7 +50,12 @@ const compileMd2Html = (filename: string): string => {
   let config: Config = configResult?.config
   if (config == null) {
     config = defaultConfigResult?.config
+    const { layout, highlight } = await selectLayout()
+    return config.template.replace('{{fragment}}', fragment)
+      .replace('{{layout}}', layout)
+      .replace('{{highlight}}', highlight)
   }
+
   return config.template.replace('$fragment', fragment)
 }
 
@@ -72,6 +78,6 @@ export default async (input: string, options: Options = {}): Promise<string> => 
     output = 'output.png',
     width = 800
   } = options
-
-  return await htmlScreenshot(compileMd2Html(filename), width, output)
+  const html = await compileMd2Html(filename)
+  return await htmlScreenshot(html, width, output)
 }
