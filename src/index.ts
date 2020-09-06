@@ -56,7 +56,7 @@ const compileMd2Html = async (filename: string): Promise<string> => {
       .replace('{{highlight}}', highlight)
   }
 
-  return config.template.replace('$fragment', fragment)
+  return config.template.replace('{{fragment}}', fragment)
 }
 
 const htmlScreenshot = async (html: string, width: number, output: string): Promise<string> => {
